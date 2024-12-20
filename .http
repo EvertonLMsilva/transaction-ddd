@@ -20,14 +20,13 @@ GET http://172.28.78.61:3000/client
 ###
 
 //Accounts
-GET http://172.28.78.61:3000/account/48c9783c-8182-442a-a72e-720f64b97d7sf
+GET http://172.28.78.61:3000/account/48c9783c-8182-442a-a72e-720f64b97d7f
 
 ###
-POST http://172.28.78.61:3000/account/
+PUT http://172.28.78.61:3000/account/48c9783c-8182-442a-a72e-720f64b97d7f
 content-type: application/json
 
 {
-  "client_id": "48c9783c-8182-442a-a72e-720f64b97d7f",
   "amount": 100
 }
 

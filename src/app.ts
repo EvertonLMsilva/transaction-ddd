@@ -75,13 +75,13 @@ app.get('/account/:client_id', async (req: Request, res: Response): Promise<any>
   }
 })
 
-app.post('/account', async (req: Request, res: Response): Promise<any> => {
-  const { body } = req;
+app.put('/account/:client_id', async (req: Request, res: Response): Promise<any> => {
+  const { body, params } = req;
 
   try {
     const findAccount = await db.query(`
       SELECT * FROM accounts 
-      WHERE client_id = '${body.client_id}'
+      WHERE client_id = '${params.client_id}'
       `).then((dataValues) => dataValues[0]);
 
     if (!findAccount) {
@@ -93,7 +93,7 @@ app.post('/account', async (req: Request, res: Response): Promise<any> => {
     await db.query(`
         UPDATE accounts
         SET amount = ${parseFloat(parseAmount)}
-        WHERE client_id = '${body.client_id}'
+        WHERE client_id = '${params.client_id}'
         `);
 
     res.status(200).json({ message: "Update success!" });
