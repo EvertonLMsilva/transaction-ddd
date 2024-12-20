@@ -4,8 +4,14 @@ POST http://172.28.78.61:3000/client
 content-type: application/json
 
 {
-  "name": "Isabela",
-  "cpf": "327.332.780-45"
+  # "name": "Isabela",
+  # "cpf": "327.332.780-45"
+
+  # "name": "Everton",
+  # "cpf": "853.450.430-00"
+
+  "name": "Kaiane",
+  "cpf": "256.714.890-67"
 }
 ###
 GET http://172.28.78.61:3000/client
@@ -14,7 +20,16 @@ GET http://172.28.78.61:3000/client
 ###
 
 //Accounts
-GET http://172.28.78.61:3000/account/8c2b1388-7d13-442e-8265-6cc1373f3fc4
+GET http://172.28.78.61:3000/account/48c9783c-8182-442a-a72e-720f64b97d7sf
+
+###
+POST http://172.28.78.61:3000/account/
+content-type: application/json
+
+{
+  "client_id": "48c9783c-8182-442a-a72e-720f64b97d7f",
+  "amount": 100
+}
 
 ###
 

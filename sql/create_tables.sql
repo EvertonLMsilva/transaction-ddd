@@ -2,7 +2,9 @@ CREATE TABLE IF NOT EXISTS transactions_bank.clients
 (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name character varying COLLATE pg_catalog."default" NOT NULL,
-    cpf character varying COLLATE pg_catalog."default" NOT NULL
+    cpf character varying COLLATE pg_catalog."default" NOT NULL,
+    created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS transactions_bank.accounts

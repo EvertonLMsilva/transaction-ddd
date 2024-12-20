@@ -60,14 +60,46 @@ app.post('/client', async (req: Request, res: Response): Promise<any> => {
 //account client
 app.get('/account/:client_id', async (req: Request, res: Response): Promise<any> => {
   const { params } = req;
-  if (!params.client_id) return res.status(400).json({ err: "Id required!" })
+  try {
 
-  const findAccount = await db.query(`
+    if (!params.client_id) return res.status(400).json({ err: "Id required!" })
+
+    const findAccount = await db.query(`
     SELECT * FROM accounts 
     WHERE client_id = '${params.client_id}'
     `);
 
-  res.status(200).json({ data: findAccount });
+    res.status(200).json({ data: findAccount });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+})
+
+app.post('/account', async (req: Request, res: Response): Promise<any> => {
+  const { body } = req;
+
+  try {
+    const findAccount = await db.query(`
+      SELECT * FROM accounts 
+      WHERE client_id = '${body.client_id}'
+      `).then((dataValues) => dataValues[0]);
+
+    if (!findAccount) {
+      return res.status(404).json({ err: "Client not found!" })
+    }
+
+    const parseAmount = (parseFloat(findAccount.amount) + parseFloat(body.amount)).toFixed(2)
+
+    await db.query(`
+        UPDATE accounts
+        SET amount = ${parseFloat(parseAmount)}
+        WHERE client_id = '${body.client_id}'
+        `);
+
+    res.status(200).json({ message: "Update success!" });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
 })
 
 //transaction client
@@ -88,7 +120,7 @@ app.post('/transaction', async (req: Request, res: Response): Promise<any> => {
       GROUP BY C.name, C.cpf, C.created_at, A.amount;
       `)
       .then((dataValues) => {
-        if (dataValues.lenght <= 0) return undefined;
+        if (dataValues.length <= 0) return undefined;
         dataValues[0].amount = parseFloat(dataValues[0].amount)
         return dataValues[0];
       });
@@ -103,7 +135,7 @@ app.post('/transaction', async (req: Request, res: Response): Promise<any> => {
       GROUP BY C.name, C.cpf, C.created_at, A.amount;
       `)
       .then((dataValues) => {
-        if (dataValues.lenght <= 0) return undefined;
+        if (dataValues.length <= 0) return undefined;
         dataValues[0].amount = parseFloat(dataValues[0].amount)
         return dataValues[0]
       });
