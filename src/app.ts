@@ -5,7 +5,7 @@ const app = express();
 app.use(express.json());
 
 const db = pgp({
-  schema: "public"
+  schema: "transactions_bank"
 })("postgres://admin:admin%40123@localhost:5432/transaction_db");
 
 //client
