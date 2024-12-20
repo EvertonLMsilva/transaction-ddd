@@ -1,0 +1,29 @@
+//Client
+###
+POST http://172.28.78.61:3000/client
+content-type: application/json
+
+{
+  "name": "Isabela",
+  "cpf": "327.332.780-45"
+}
+###
+GET http://172.28.78.61:3000/client
+
+
+###
+
+//Accounts
+GET http://172.28.78.61:3000/account/8c2b1388-7d13-442e-8265-6cc1373f3fc4
+
+###
+
+//transactions
+POST http://172.28.78.61:3000/transaction
+content-type: application/json
+
+{
+  "sender_id": "23c227cb-7763-4022-bd45-1b4867ff59ea",
+  "receiver_id": "1727ed99-658a-451f-9e8f-1e85bc8d5840",
+  "amount": 35.47
+}

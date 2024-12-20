@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres
+    container_name: postgres_container
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin@123
+      POSTGRES_DB: transaction_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./sql/create_schema.sql:/docker-entrypoint-initdb.d/create_schema.sql
+      - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+
+volumes:
+  postgres_data:
+    driver: local

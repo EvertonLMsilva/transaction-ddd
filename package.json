@@ -1,0 +1,26 @@
+{
+  "name": "09-petshop-nodejs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "watch": "webpack --watch --progress --colors --config webpack.conf.js",
+    "dev": "nodemon --watch src --ext ts --exec ts-node ./src/app.ts",
+    "prod": "NODE_ENV=production webpack -p --config webpack.conf.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "pg-promise": "^11.10.2"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/pg-promise": "^5.4.3",
+    "nodemon": "^3.1.9",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  }
+}

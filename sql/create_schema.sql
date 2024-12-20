@@ -1,0 +1,4 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE SCHEMA IF NOT EXISTS transactions_bank
+    AUTHORIZATION admin;
+END;
