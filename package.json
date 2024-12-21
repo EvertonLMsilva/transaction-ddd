@@ -5,6 +5,7 @@
   "scripts": {
     "watch": "webpack --watch --progress --colors --config webpack.conf.js",
     "dev": "nodemon --watch src --ext ts --exec ts-node ./src/app.ts",
+    "test": "jest --watch",
     "prod": "NODE_ENV=production webpack -p --config webpack.conf.js"
   },
   "keywords": [],
@@ -12,14 +13,19 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "axios": "^1.7.9",
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "pg-promise": "^11.10.2"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.4",
     "@types/express": "^5.0.0",
+    "@types/jest": "^29.5.14",
     "@types/pg-promise": "^5.4.3",
+    "jest": "^29.7.0",
     "nodemon": "^3.1.9",
+    "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
   }

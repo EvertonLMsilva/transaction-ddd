@@ -9,11 +9,23 @@ const db = pgp({
 })("postgres://admin:admin%40123@localhost:5432/transaction_db");
 
 //client
+app.get('/client/:id', async (req: Request, res: Response): Promise<any> => {
+  const { params } = req;
+  try {
+    const findClient = await db.query(`select * from clients WHERE id = '${params.id}';`)
+      .then((dataValue) => dataValue[0]);
+    if (!findClient) return res.status(400).json({ error: "Client not found!" });
+    res.status(200).json(findClient);
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching clients' });
+  }
+});
+
 app.get('/client', async (req: Request, res: Response): Promise<any> => {
   try {
     const listClient = await db.query(`select * from clients;`);
 
-    res.status(200).json({ data: listClient });
+    res.status(200).json(listClient);
   } catch (error) {
     res.status(500).json({ error: 'Error fetching clients' });
   }
@@ -27,10 +39,10 @@ app.post('/client', async (req: Request, res: Response): Promise<any> => {
     if (!findClient) {
       await db.query(`INSERT INTO clients (name, cpf) VALUES ('${body.name}', '${body.cpf}')`)
         .catch((error: any) => { throw new Error(error.message) });
+
+      res.status(200);
     } else {
-      return res.status(404).json({
-        Err: "User already registered"
-      })
+      return res.status(404).json({ Err: "User already registered" })
     }
 
     const findNewClient = await db.query(`SELECT id, name FROM clients WHERE cpf = '${body.cpf}'`)
@@ -46,13 +58,48 @@ app.post('/client', async (req: Request, res: Response): Promise<any> => {
       .then((dataValues) => dataValues[0]);
 
     res.status(200).json({
-      data: {
-        ...findNewClient,
-        amount: findNewAccount.amount
-      }
+      ...findNewClient,
+      amount: findNewAccount.amount
     })
   } catch (error: any) {
     res.status(500).json({ error: error.message })
+  }
+
+});
+
+app.put('/client/:id', async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { params, body } = req;
+    if (!params.id) return res.status(400).json({ err: "Id required!" });
+    const findClient = await db.query(`SELECT * FROM clients WHERE id = '${params.id}'`)
+      .then(dataValues => dataValues[0]);
+    if (!findClient) return res.status(400).json({ err: "Client not found!" });
+    const updateClient = await db.query(`
+      UPDATE clients 
+      SET 
+        name = '${body?.name || findClient.name}', 
+        cpf = '${body?.cpf || findClient.cpf}', 
+        active = ${body?.active || findClient.active}
+      WHERE id = '${params.id}'
+      `);
+
+    res.status(200).send();
+  } catch (error: any) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
+app.delete('/client/:id', async (req: Request, res: Response): Promise<any> => {
+  const { params } = req;
+  try {
+    const findClient = await db.query(`SELECT id FROM clients WHERE id = '${params.id}'`)
+      .then(dataValues => dataValues[0]);
+    if (!findClient) return res.status(404).json({ err: "Client not found!" });
+
+    await db.query(`UPDATE clients SET active = false WHERE id = '${params.id}'`);
+    res.status(200).send();
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
   }
 
 });
@@ -84,9 +131,7 @@ app.put('/account/:client_id', async (req: Request, res: Response): Promise<any>
       WHERE client_id = '${params.client_id}'
       `).then((dataValues) => dataValues[0]);
 
-    if (!findAccount) {
-      return res.status(404).json({ err: "Client not found!" })
-    }
+    if (!findAccount) return res.status(404).json({ err: "Client not found!" });
 
     const parseAmount = (parseFloat(findAccount.amount) + parseFloat(body.amount)).toFixed(2)
 

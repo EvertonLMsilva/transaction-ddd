@@ -4,18 +4,31 @@ POST http://172.28.78.61:3000/client
 content-type: application/json
 
 {
-  # "name": "Isabela",
-  # "cpf": "327.332.780-45"
+  # "name": "Pedro",
+  #  "cpf": "744.768.220-96"
 
-  # "name": "Everton",
-  # "cpf": "853.450.430-00"
+  "name": "Everton",
+  "cpf": "853.450.430-00"
 
-  "name": "Kaiane",
-  "cpf": "256.714.890-67"
+  # "name": "Kaiane",
+  # "cpf": "256.714.890-67"
 }
 ###
 GET http://172.28.78.61:3000/client
+###
+GET http://172.28.78.61:3000/client/e8db3b60-55b0-4f32-9e56-061a40b973f1
+###
+PUT http://172.28.78.61:3000/client/e5d04100-cb47-4805-96b2-c7eac19e9a52
+content-type: application/json
 
+{
+  "name":"Everton L M Silva",
+  "cpf":"078.642.640-34",
+  "active": false
+}
+
+###
+DELETE http://172.28.78.61:3000/client/d5410a59-da9b-408a-a8d2-7498166d7a13
 
 ###
 
@@ -29,7 +42,6 @@ content-type: application/json
 {
   "amount": 100
 }
-
 ###
 
 //transactions
