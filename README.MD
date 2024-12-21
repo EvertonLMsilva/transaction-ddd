@@ -1,10 +1,12 @@
 ## Projeto molde-transaction
 
-Este projeto foi inicializado sem nenhum padrão, com todas logicas apenas no arquivo app.
-A ideia central é refatorar o código ultilizando:
+Este projeto foi inicializado para adicionar padrão separando camadas e suas responsabilidades ultilizando:
 - boas praticas
 - padrões de projeto 
 - design de projeto e código
+
+O modelo para iniciar este projeto se encontra em
+[molde-transaction](https://github.com/EvertonLMsilva/molde-transaction)
 
 ### Setup do projeto
 
