@@ -12,6 +12,7 @@ const db = pgp({
 app.get('/client/:id', async (req: Request, res: Response): Promise<any> => {
   const { params } = req;
   try {
+
     const findClient = await db.query(`select * from clients WHERE id = '${params.id}';`)
       .then((dataValue) => dataValue[0]);
     if (!findClient) return res.status(400).json({ error: "Client not found!" });
@@ -34,6 +35,7 @@ app.get('/client', async (req: Request, res: Response): Promise<any> => {
 app.post('/client', async (req: Request, res: Response): Promise<any> => {
   const { body } = req;
   try {
+
     const findClient = await db.query(`SELECT id FROM clients WHERE cpf = '${body.cpf}'`)
       .then((dataValues) => dataValues[0]);
     if (!findClient) {
@@ -50,6 +52,7 @@ app.post('/client', async (req: Request, res: Response): Promise<any> => {
 
     const findAccount = await db.query(`SELECT id FROM accounts WHERE client_id = '${findNewClient.id}'`)
       .then((dataValues) => dataValues[0]);
+
     if (!findAccount) {
       await db.query(`INSERT INTO accounts (client_id, amount) VALUES ('${findNewClient.id}', 0)`)
         .catch((error: any) => { throw new Error(error.message) });
@@ -74,7 +77,14 @@ app.put('/client/:id', async (req: Request, res: Response): Promise<any> => {
     const findClient = await db.query(`SELECT * FROM clients WHERE id = '${params.id}'`)
       .then(dataValues => dataValues[0]);
     if (!findClient) return res.status(400).json({ err: "Client not found!" });
-    const updateClient = await db.query(`
+    if (body?.cpf) {
+      const findClient = await db.query(`SELECT id FROM clients WHERE cpf = '${body.cpf}'`)
+        .then((dataValues) => dataValues[0]);
+
+      if (findClient) return res.status(400).json({ error: "CPF alread exists!" })
+    }
+
+    await db.query(`
       UPDATE clients 
       SET 
         name = '${body?.name || findClient.name}', 
@@ -101,7 +111,20 @@ app.delete('/client/:id', async (req: Request, res: Response): Promise<any> => {
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
+});
 
+app.delete('/client/:id/delete', async (req: Request, res: Response): Promise<any> => {
+  const { params } = req;
+  try {
+    const findClient = await db.query(`SELECT id FROM clients WHERE id = '${params.id}'`)
+      .then(dataValues => dataValues[0]);
+    if (!findClient) return res.status(404).json({ err: "Client not found!" });
+
+    await db.query(`DELETE FROM clients WHERE id = '${params.id}'`);
+    res.status(200).send();
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 //account client
