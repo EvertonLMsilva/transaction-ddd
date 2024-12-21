@@ -59,7 +59,6 @@ app.post('/client', async (req: Request, res: Response): Promise<any> => {
     }
     const findNewAccount = await db.query(`SELECT amount FROM accounts WHERE client_id = '${findNewClient.id}'`)
       .then((dataValues) => dataValues[0]);
-
     res.status(200).json({
       ...findNewClient,
       amount: findNewAccount.amount
@@ -121,6 +120,8 @@ app.delete('/client/:id/delete', async (req: Request, res: Response): Promise<an
     if (!findClient) return res.status(404).json({ err: "Client not found!" });
 
     await db.query(`DELETE FROM clients WHERE id = '${params.id}'`);
+    await db.query(`DELETE FROM accounts WHERE client_id = '${params.id}'`);
+    await db.query(`DELETE FROM transactions WHERE sender_id = '${params.id}'`);
     res.status(200).send();
   } catch (error: any) {
     res.status(500).json({ error: error.message });

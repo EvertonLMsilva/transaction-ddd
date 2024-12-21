@@ -1,31 +1,48 @@
 import axios from 'axios';
 
 //skip
-describe.skip('transações entre clientes', () => {
+describe('transações entre clientes', () => {
   let connectApi: any;
-  beforeEach(() => {
+  let sender_id: string = "";
+  let receiver_id: string = "";
+  beforeAll(async () => {
     connectApi = axios.create({
       baseURL: "http://172.28.78.61:3000",
       headers: {
         "content-type": "application/json"
       }
-    })
-  });
-
-  it("Cria transaction", async () => {
-    const sender_id = "23c227cb-7763-4022-bd45-1b4867ff59ea";
-    const receiver_id = "1727ed99-658a-451f-9e8f-1e85bc8d5840";
-
-    const createTransaction = await connectApi.post('/transaction', {
-      sender_id,
-      receiver_id,
-      "amount": 50
-    }).catch((err: any) => {
-      console.log("Line: 25 ===>", err.message);
     });
 
-    console.log("Line: 28 ===>", createTransaction)
-
+    await connectApi.post('/client', {
+      name: "Test01",
+      cpf: "3236.177.550-62"
+    }).then((dataValues: any) => {
+      sender_id = dataValues.data.id
+    });
+    await connectApi.post('/client', {
+      name: "teste02",
+      cpf: "333.956.250-44"
+    }).then((dataValues: any) => {
+      receiver_id = dataValues.data.id
+    });
+    await connectApi.put(`/account/${sender_id}`, {
+      amount: 200,
+    });
   });
 
+
+  it("Cria transaction", async () => {
+    const { status } = await connectApi.post('/transaction', {
+      sender_id,
+      receiver_id,
+      amount: 50
+    });
+
+    expect(status).toBe(200);
+  });
+
+  afterAll(async () => {
+    await connectApi.delete(`/client/${sender_id}/delete`);
+    await connectApi.delete(`/client/${receiver_id}/delete`);
+  });
 })
